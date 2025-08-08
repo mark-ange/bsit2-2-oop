@@ -1,4 +1,4 @@
-public class Main {
+public class student {
     private String ngalan;
     private int edad;
     private String course;
@@ -6,7 +6,7 @@ public class Main {
     private double grado2;
     private double grado3;
 
-    public Main(String ngalan, int edad, String course, double grado1, double grado2, double grado3) {
+    public student(String ngalan, int edad, String course, double grado1, double grado2, double grado3) {
         this.ngalan = ngalan;
         this.edad = edad;
         this.course = course;
@@ -45,4 +45,5 @@ public class Main {
     public boolean isPassing() {
         return calculateAverage() >= 70;
     }
+
 }
