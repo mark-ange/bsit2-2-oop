@@ -1,52 +1,50 @@
-public class GradeCalculator {
+public class BankAccount {
+    static String bankName = "Liceo Bank";
+    static int totalAccounts = 0;
+    static double interestRate = 0.03;
 
+    private String accountNumber;
+    private String accountHolderName;
+    private double balance;
 
-    public double calculateAverage(double... grades) {
-        if (grades.length == 0) {
-            return 0.0;
+    private static String generateAccountNumber() {
+        totalAccounts++;
+        return String.format("ACC%03d", totalAccounts);
+    }
+
+    public BankAccount(String accountHolderName, double initialBalance) {
+        this.accountNumber = generateAccountNumber();
+        this.accountHolderName = accountHolderName;
+        this.balance = initialBalance;
+
+        System.out.println("Account Created: " + accountNumber + " for "
+                + accountHolderName + " with initial balance: $"
+                + String.format("%.1f", initialBalance));
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println(accountHolderName + " deposited $"
+                    + String.format("%.1f", amount)
+                    + ". New balance: $" + String.format("%.1f", balance));
         }
-        double sum = 0.0;
-        for (double grade : grades) {
-            sum += grade;
-        }
-        return sum / grades.length;
     }
 
-
-    public String getGrade(double average) {
-        if (average >= 90 && average <= 100) {
-            return "A";
-        } else if (average >= 80) {
-            return "B";
-        } else if (average >= 70) {
-            return "C";
-        } else if (average >= 60) {
-            return "D";
-        } else {
-            return "F";
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println(accountHolderName + " withdrew $"
+                    + String.format("%.1f", amount)
+                    + ". New balance: $" + String.format("%.1f", balance));
         }
     }
 
-
-    public void displayResult(String studentName, double average) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
+    public double calculateInterest() {
+        return balance * interestRate;
     }
 
-    public void displayResult(String studentName, double average, String Grade) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-        System.out.println("Grade: " + Grade);
-    }
-
-
-    public static void main(String[] args) {
-        GradeCalculator calculator = new GradeCalculator();
-
-        String studentName = "John Smith";
-        double average = calculator.calculateAverage(85.5, 92.0, 78.5, 90.0);
-        String Grade = calculator.getGrade(average);
-        calculator.displayResult(studentName, average);
-        calculator.displayResult(studentName, average, Grade);
+    public String getAccountHolderName() {
+        return accountHolderName;
     }
 }
