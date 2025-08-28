@@ -1,52 +1,38 @@
-public class GradeCalculator {
+mport java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.HashSet;
 
-
-    public double calculateAverage(double... grades) {
-        if (grades.length == 0) {
-            return 0.0;
-        }
-        double sum = 0.0;
-        for (double grade : grades) {
-            sum += grade;
-        }
-        return sum / grades.length;
-    }
-
-
-    public String getGrade(double average) {
-        if (average >= 90 && average <= 100) {
-            return "A";
-        } else if (average >= 80) {
-            return "B";
-        } else if (average >= 70) {
-            return "C";
-        } else if (average >= 60) {
-            return "D";
-        } else {
-            return "F";
-        }
-    }
-
-
-    public void displayResult(String studentName, double average) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-    }
-
-    public void displayResult(String studentName, double average, String Grade) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-        System.out.println("Grade: " + Grade);
-    }
-
-
+public class Main {
     public static void main(String[] args) {
-        GradeCalculator calculator = new GradeCalculator();
+        PostManager manager = new PostManager();
 
-        String studentName = "John Smith";
-        double average = calculator.calculateAverage(85.5, 92.0, 78.5, 90.0);
-        String Grade = calculator.getGrade(average);
-        calculator.displayResult(studentName, average);
-        calculator.displayResult(studentName, average, Grade);
+        String postTitle = "Java Programming Tips";
+        int engagementScore = manager.calculateEngagement(150, 75, 25);
+        String category = manager.getCategoryRating(engagementScore);
+
+        System.out.println("═══ Social Media Post Manager ═══");
+        manager.displayPostStats(postTitle, engagementScore, category);
+        System.out.println();
+
+        String[] hashtags = {"#java", "#coding", "#programming", "#java", "#tips"};
+        ArrayList<String> uniqueHashtags = manager.manageHashtags(hashtags);
+        System.out.println("Unique Hashtags: " + uniqueHashtags);
+
+        ArrayList<String> posts = new ArrayList<>();
+        posts.add("Advanced Java Tutorial");
+        posts.add("Spring Boot Guide");
+        posts.add("Beginner Java Basics");
+
+        HashMap<String, Integer> postEngagement = new HashMap<>();
+        postEngagement.put("Advanced Java Tutorial", 800);
+        postEngagement.put("Spring Boot Guide", 600);
+        postEngagement.put("Beginner Java Basics", 100);
+
+        LinkedList<String> trendingPosts = manager.findTrendingPosts(posts, postEngagement);
+        System.out.println("Trending Posts: " + trendingPosts);
+
+        HashSet<String> uniqueAuthors = manager.getUniqueAuthors("Alice", "Bob", "Alice", "Charlie", "Bob");
+        System.out.println("Unique Authors: " + uniqueAuthors);
     }
 }
