@@ -51,9 +51,9 @@ public class Main {
     }
 
     static class Order {
-        private String customerName;
-        private ArrayList<String> items;
-        private ArrayList<Double> prices;
+        private final String customerName;
+        private final ArrayList<String> items;
+        private final ArrayList<Double> prices;
         private static int totalOrders = 0;
 
         public Order(String customerName) {
