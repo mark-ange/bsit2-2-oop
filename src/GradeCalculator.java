@@ -1,52 +1,96 @@
-public class GradeCalculator {
+import java.util.ArrayList;
+import java.util.Scanner;
 
+public class LibraryManager {
+    private ArrayList<String> books;
+    private Scanner scanner;
 
-    public double calculateAverage(double... grades) {
-        if (grades.length == 0) {
-            return 0.0;
+    public LibraryManager() {
+        books = new ArrayList<>();
+        books.add("Java Programming");
+        books.add("Web Development");
+        books.add("Database Design");
+        scanner = new Scanner(System.in);
+    }
+
+    public void showBooks() {
+        try {
+            if (books == null) {
+                throw new IllegalStateException("Book list is not initialized.");
+            }
+
+            if (books.isEmpty()) {
+                System.out.println("The library has no books.");
+            } else {
+                System.out.println("Books in the library:");
+                for (int i = 0; i < books.size(); i++) {
+                    System.out.println((i + 1) + ". " + books.get(i));
+                }
+            }
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Completed displaying books.\n");
         }
-        double sum = 0.0;
-        for (double grade : grades) {
-            sum += grade;
+    }
+
+    public void addBook() {
+        try {
+            System.out.print("Enter the book title to add: ");
+            String title = scanner.nextLine();
+
+            if (title == null || title.trim().isEmpty()) {
+                throw new IllegalArgumentException("Book title cannot be null or empty.");
+            }
+
+            if (title.trim().length() < 3) {
+                throw new IllegalArgumentException("Book title must be at least 3 characters long.");
+            }
+
+            books.add(title.trim());
+            System.out.println("Book added successfully.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error adding book: " + e.getMessage());
+        } finally {
+            System.out.println("Add operation completed.");
+            showBooks();
         }
-        return sum / grades.length;
     }
 
+    public void removeBook() {
+        try {
+            if (books.isEmpty()) {
+                System.out.println("Cannot remove book: The library is empty.");
+                return;
+            }
 
-    public String getGrade(double average) {
-        if (average >= 90 && average <= 100) {
-            return "A";
-        } else if (average >= 80) {
-            return "B";
-        } else if (average >= 70) {
-            return "C";
-        } else if (average >= 60) {
-            return "D";
-        } else {
-            return "F";
+            System.out.print("Enter the index of the book to remove (1 to " + books.size() + "): ");
+            String input = scanner.nextLine();
+
+            int index = Integer.parseInt(input) - 1;
+
+            if (index < 0) {
+                throw new IllegalArgumentException("Index cannot be negative.");
+            }
+
+            String removedBook = books.remove(index);
+            System.out.println("Removed book: " + removedBook);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: Please enter a valid number.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid index: Please enter a number within the valid range.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Remove operation completed.");
+            showBooks();
         }
     }
-
-
-    public void displayResult(String studentName, double average) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-    }
-
-    public void displayResult(String studentName, double average, String Grade) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-        System.out.println("Grade: " + Grade);
-    }
-
 
     public static void main(String[] args) {
-        GradeCalculator calculator = new GradeCalculator();
-
-        String studentName = "John Smith";
-        double average = calculator.calculateAverage(85.5, 92.0, 78.5, 90.0);
-        String Grade = calculator.getGrade(average);
-        calculator.displayResult(studentName, average);
-        calculator.displayResult(studentName, average, Grade);
+        LibraryManager manager = new LibraryManager();
+        manager.showBooks();
+        manager.addBook();
+        manager.removeBook();
     }
 }
