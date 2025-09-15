@@ -1,52 +1,36 @@
-public class GradeCalculator {
-
-
-    public double calculateAverage(double... grades) {
-        if (grades.length == 0) {
-            return 0.0;
+class PetService {
+    private static final double BASE_FEE = 50.0;
+    private static final double VACCINATION_FEE = 25.0;
+    private static final double GROOMING_FEE = 30.0;
+    
+    public double calculateFee() {
+        return BASE_FEE;
+    }
+    
+    public double calculateFee(boolean withVaccination) {
+        if (withVaccination) {
+            return BASE_FEE + VACCINATION_FEE;
         }
-        double sum = 0.0;
-        for (double grade : grades) {
-            sum += grade;
-        }
-        return sum / grades.length;
+        return BASE_FEE;
     }
-
-
-    public String getGrade(double average) {
-        if (average >= 90 && average <= 100) {
-            return "A";
-        } else if (average >= 80) {
-            return "B";
-        } else if (average >= 70) {
-            return "C";
-        } else if (average >= 60) {
-            return "D";
-        } else {
-            return "F";
-        }
+    
+    public double calculateFee(boolean withVaccination, boolean withGrooming) {
+        double totalFee = BASE_FEE;
+        if (withVaccination) totalFee += VACCINATION_FEE;
+        if (withGrooming) totalFee += GROOMING_FEE;
+        return totalFee;
     }
-
-
-    public void displayResult(String studentName, double average) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
+    
+    public double calculateFee(String emergencyType) {
+        return 200.0;
     }
-
-    public void displayResult(String studentName, double average, String Grade) {
-        System.out.println("Student: " + studentName);
-        System.out.println("Average: " + average);
-        System.out.println("Grade: " + Grade);
-    }
-
-
+    
     public static void main(String[] args) {
-        GradeCalculator calculator = new GradeCalculator();
-
-        String studentName = "John Smith";
-        double average = calculator.calculateAverage(85.5, 92.0, 78.5, 90.0);
-        String Grade = calculator.getGrade(average);
-        calculator.displayResult(studentName, average);
-        calculator.displayResult(studentName, average, Grade);
+        PetService petService = new PetService();
+        
+        System.out.println("Basic checkup fee: $" + petService.calculateFee());
+        System.out.println("Checkup with vaccination fee: $" + petService.calculateFee(true));
+        System.out.println("Full service (checkup + vaccination + grooming) fee: $" + petService.calculateFee(true, true));
+        System.out.println("Emergency fee: $" + petService.calculateFee("Emergency"));
     }
 }
