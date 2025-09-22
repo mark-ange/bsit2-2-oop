@@ -1,129 +1,208 @@
-import java.util.*;
 
-class PetService {
-    private static final double BASE_FEE = 50.0;
-    private static final double VACCINATION_FEE = 25.0;
-    private static final double GROOMING_FEE = 30.0;
+public class Book {
+    private String title;
+    private String author;
+    private String isbn;
+    private boolean isAvailable;
+    private int yearPublished;
 
-    public double calculateFee() {
-        return BASE_FEE;
+    public Book(String title, String author, String isbn, int yearPublished) {
+        setTitle(title);
+        setAuthor(author);
+        setIsbn(isbn);
+        setYearPublished(yearPublished);
+        this.isAvailable = true;
     }
 
-    public double calculateFee(boolean withVaccination) {
-        if (withVaccination) {
-            return BASE_FEE + VACCINATION_FEE;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public int getYearPublished() {
+        return yearPublished;
+    }
+
+    public void setTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty.");
         }
-        return BASE_FEE;
+        this.title = title;
     }
 
-    public double calculateFee(boolean withVaccination, boolean withGrooming) {
-        double fee = BASE_FEE;
-        if (withVaccination) fee += VACCINATION_FEE;
-        if (withGrooming) fee += GROOMING_FEE;
-        return fee;
+    public void setAuthor(String author) {
+        if (author == null || author.isEmpty()) {
+            throw new IllegalArgumentException("Author cannot be null or empty.");
+        }
+        this.author = author;
     }
 
-    public double calculateFee(String emergencyType) {
-        return 200.0;
-    }
-}
-
-abstract class Pet {
-    protected String name;
-    protected int age;
-
-    public Pet(String name, int age) {
-        this.name = name;
-        this.age = age;
+    public void setIsbn(String isbn) {
+        if (isbn == null || (isbn.length() != 10 && isbn.length() != 13)) {
+            throw new IllegalArgumentException("ISBN must be 10 or 13 characters long.");
+        }
+        this.isbn = isbn;
     }
 
-    public abstract void makeSound();
-
-    public void displayInfo() {
-        System.out.println("Pet Name: " + name);
-        System.out.println("Age: " + age);
-    }
-}
-
-class Dog extends Pet implements Trainable {
-    public Dog(String name, int age) {
-        super(name, age);
+    public void setYearPublished(int year) {
+        if (year < 1450 || year > 2025) {
+            throw new IllegalArgumentException("Year must be between 1450 and 2025.");
+        }
+        this.yearPublished = year;
     }
 
-    @Override
-    public void makeSound() {
-        System.out.println(name + " says: Woof! Woof!");
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
     }
 
-    @Override
-    public void performTrick() {
-        System.out.println("Training " + name + ": Sits and shakes");
-    }
-}
-
-class Cat extends Pet {
-    public Cat(String name, int age) {
-        super(name, age);
+    public boolean borrowBook() {
+        if (isAvailable) {
+            isAvailable = false;
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void makeSound() {
-        System.out.println(name + " says: Meow! Meow!");
+    public boolean returnBook() {
+        if (!isAvailable) {
+            isAvailable = true;
+            return true;
+        }
+        return false;
+    }
+
+    public void displayBookInfo() {
+        System.out.println("Title: " + title + " | Author: " + author + " | ISBN: " + isbn + " | Year: " + yearPublished + " | Status: " + (isAvailable ? "Available" : "Borrowed"));
     }
 }
 
-class Bird extends Pet implements Trainable {
-    public Bird(String name, int age) {
-        super(name, age);
+// Library.java
+public class Library {
+    private Book[] books;
+    private int bookCount;
+
+    public Library() {
+        books = new Book[10];
+        bookCount = 0;
     }
 
-    @Override
-    public void makeSound() {
-        System.out.println(name + " says: Tweet! Tweet!");
+    public boolean addBook(Book book) {
+        if (bookCount < books.length) {
+            books[bookCount++] = book;
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void performTrick() {
-        System.out.println("Training " + name + ": Flies in circles and lands on perch");
+    public boolean removeBook(String isbn) {
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].getIsbn().equals(isbn)) {
+                for (int j = i; j < bookCount - 1; j++) {
+                    books[j] = books[j + 1];
+                }
+                books[--bookCount] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Book findBook(String isbn) {
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].getIsbn().equals(isbn)) {
+                return books[i];
+            }
+        }
+        return null;
+    }
+
+    public boolean borrowBook(String isbn) {
+        Book book = findBook(isbn);
+        if (book != null) {
+            return book.borrowBook();
+        }
+        return false;
+    }
+
+    public boolean returnBook(String isbn) {
+        Book book = findBook(isbn);
+        if (book != null) {
+            return book.returnBook();
+        }
+        return false;
+    }
+
+    public void displayAvailableBooks() {
+        System.out.println("Available books:");
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].isAvailable()) {
+                books[i].displayBookInfo();
+            }
+        }
+    }
+
+    public void displayAllBooks() {
+        System.out.println("All books in library:");
+        for (int i = 0; i < bookCount; i++) {
+            books[i].displayBookInfo();
+        }
+    }
+
+    public int getBookCount() {
+        return bookCount;
     }
 }
 
-interface Trainable {
-    void performTrick();
-}
 
-public class Main {
+public class Book {
     public static void main(String[] args) {
-        System.out.println("=== PET SERVICE FEES ===");
-        PetService service = new PetService();
-        System.out.println("Basic checkup: $" + service.calculateFee());
-        System.out.println("Checkup with vaccination: $" + service.calculateFee(true));
-        System.out.println("Full service (vaccination + grooming): $" + service.calculateFee(true, true));
-        System.out.println("Emergency service: $" + service.calculateFee("critical"));
-        System.out.println();
+        Library library = new Library();
 
-        System.out.println("=== PET INFORMATION ===");
-        Pet dog = new Dog("Buddy", 3);
-        Pet cat = new Cat("Whiskers", 2);
-        Pet bird = new Bird("Tweety", 1);
+  
+        Book book1 = new Book("Java Programming", "John Smith", "1234567890", 2020);
+        Book book2 = new Book("Data Structures", "Jane Doe", "9876543210", 2019);
+        Book book3 = new Book("Web Development", "Mike Johnson", "5555666677", 2021);
 
-        dog.displayInfo();
-        dog.makeSound();
-        System.out.println();
+        library.addBook(book1);
+        library.addBook(book2);
+        library.addBook(book3);
 
-        cat.displayInfo();
-        cat.makeSound();
-        System.out.println();
+  
+        library.displayAllBooks();
 
-        bird.displayInfo();
-        bird.makeSound();
-        System.out.println();
+     
+        System.out.println("\nBorrowing Java Programming...");
+        library.borrowBook("1234567890");
 
-        System.out.println("=== TRAINING PETS ===");
-        Trainable trainDog = (Trainable) dog;
-        Trainable trainBird = (Trainable) bird;
+      
+        System.out.println("\nTrying to borrow Java Programming again...");
+        library.borrowBook("1234567890");
 
-        trainDog.performTrick();
-        trainBird.performTrick();
+     
+        System.out.println("\nReturning Java Programming...");
+        library.returnBook("1234567890");
+
+       
+        System.out.println("\nDisplaying available books...");
+        library.displayAvailableBooks();
+
+        
+        System.out.println("\nTesting invalid data...");
+        try {
+            new Book("Invalid Book", "Invalid Author", "123", 1400);  
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
-    }
+}
